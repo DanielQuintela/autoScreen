@@ -2,6 +2,8 @@ import pyautogui
 import random
 import time
 import keyboard  
+import os
+from datetime import datetime
 
 # Desativa a trava de segurança dos cantos da tela para evitar paradas acidentais
 pyautogui.FAILSAFE = False
@@ -21,6 +23,8 @@ pyautogui.click()
 # Dá uma pequena pausa para a animação da janela descendo
 time.sleep(1)
 
+print("\n--- Iniciando movimentação e monitoramento de horário ---")
+
 try:
     while True:
         # 1. Verifica se a tecla de parada foi pressionada antes do movimento
@@ -28,14 +32,24 @@ try:
             print("\nPrograma encerrado pelo atalho de teclado (ESC).")
             break
 
-        # 2. Sorteia posições e move o mouse
+        # 2. Observa a hora: Se for 16:30, desliga o computador
+        agora = datetime.now()
+        if agora.hour == 16 and agora.minute >= 30:
+            print("\n[16:30] Hora alcançada! Iniciando o desligamento...")
+            
+        
+            os.system("shutdown /s /t 5") 
+            
+            break # Encerra o programa Python após dar o comando
+
+        # 3. Sorteia posições e move o mouse
         x_aleatorio = random.randint(0, largura_tela)
         y_aleatorio = random.randint(0, altura_tela)
         tempo_movimento = random.uniform(0.5, 2.0)
         
         pyautogui.moveTo(x_aleatorio, y_aleatorio, duration=tempo_movimento)
         
-        # 3. Pausa "natural" inteligente
+        # 4. Pausa "natural" inteligente
         tempo_pausa = random.uniform(2.0, 6.0)
         tempo_inicial = time.time()
         
